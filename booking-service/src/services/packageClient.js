@@ -1,7 +1,8 @@
 const axios = require("axios");
 
-const PACKAGE_SERVICE_URL =
-  process.env.PACKAGE_SERVICE_URL || "http://localhost:5001";
+const PACKAGE_SERVICE_URL = (
+  process.env.PACKAGE_SERVICE_URL || "http://localhost:5001"
+).replace(/\/+$/, "");
 
 /**
  * Fetch a travel package by ID from the Package Service.
