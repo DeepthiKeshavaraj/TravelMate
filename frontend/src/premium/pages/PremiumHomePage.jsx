@@ -243,9 +243,10 @@ export default function PremiumHomePage({
                         className="w-full bg-transparent text-xs font-semibold text-[#14243D] focus:outline-none cursor-pointer"
                       >
                         <option value="any">Any Budget</option>
-                        <option value="under15000">Under ₹15,000</option>
-                        <option value="15000-25000">₹15,000 - ₹25,000</option>
-                        <option value="25000-100000">₹25,000 - ₹1,00,000</option>
+                        <option value="under50k">Under ₹50,000 (India Trips)</option>
+                        <option value="50k-150k">₹50,000 – ₹1.5 Lakhs (Asia & Middle East)</option>
+                        <option value="150k-200k">₹1.5 Lakhs – ₹2.0 Lakhs (Europe & Japan)</option>
+                        <option value="above200k">₹2.0 Lakhs+ (Luxury Global Tours)</option>
                       </select>
                     </div>
                   </div>
