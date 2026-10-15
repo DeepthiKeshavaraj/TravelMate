@@ -364,7 +364,7 @@ export default function MyBookingsPage({ onNavigateToPackages }) {
                           Total Price
                         </span>
                         <span className="text-2xl font-black text-slate-900">
-                          ${Number(booking.totalPrice).toLocaleString()}
+                          ₹{Number(booking.totalPrice).toLocaleString("en-IN")}
                         </span>
                       </div>
 

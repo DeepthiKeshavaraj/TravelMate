@@ -143,7 +143,7 @@ export default function PackageDetailPage({
                 Price / Person
               </span>
               <span className="text-base font-bold text-primary-700 mt-0.5 block">
-                ${Number(pkg.price).toLocaleString()}
+                ₹{Number(pkg.price).toLocaleString("en-IN")}
               </span>
             </div>
 
@@ -198,7 +198,7 @@ export default function PackageDetailPage({
               </span>
               <div className="flex items-baseline gap-1 mt-1">
                 <span className="text-3xl font-black text-slate-900">
-                  ${Number(pkg.price).toLocaleString()}
+                  ₹{Number(pkg.price).toLocaleString("en-IN")}
                 </span>
                 <span className="text-sm font-medium text-slate-500">
                   / person

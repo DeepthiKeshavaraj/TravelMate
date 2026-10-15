@@ -140,13 +140,16 @@ export default function PremiumPackagesPage({
           if (!normDur.includes(normFilt)) return false;
         }
 
-        // 4. Budget filter
+        // 4. Budget filter (in Indian Rs, below 1,00,000)
         if (budgetFilter && budgetFilter !== "any") {
           const price = Number(pkg.price);
-          if (budgetFilter === "under1000" && price >= 1000) return false;
-          if (budgetFilter === "1000-2500" && (price < 1000 || price > 2500))
-            return false;
-          if (budgetFilter === "above2500" && price < 2500) return false;
+          if (budgetFilter === "under15000" || budgetFilter === "under1000") {
+            if (price >= 15000) return false;
+          } else if (budgetFilter === "15000-25000" || budgetFilter === "15000-20000" || budgetFilter === "1000-2500") {
+            if (price < 15000 || price > 25000) return false;
+          } else if (budgetFilter === "25000-100000" || budgetFilter === "above20000" || budgetFilter === "above2500") {
+            if (price < 25000 || price > 100000) return false;
+          }
         }
 
         // 5. Available capacity filter
@@ -204,6 +207,17 @@ export default function PremiumPackagesPage({
 
   const hasActiveDestinationFilter =
     selectedDestination && selectedDestination !== "all";
+
+  // Check if the requested destination actually exists in database packages
+  const destinationMatchInDb = useMemo(() => {
+    if (!hasActiveDestinationFilter) return null;
+    const selected = normalize(selectedDestination);
+    return packages.find((p) => {
+      const pDest = normalize(p.destination);
+      const pTitle = normalize(p.title);
+      return pDest.includes(selected) || selected.includes(pDest) || pTitle.includes(selected);
+    });
+  }, [packages, hasActiveDestinationFilter, selectedDestination]);
 
   const hasActiveFilters =
     Boolean(searchTerm && searchTerm.trim()) ||
@@ -314,9 +328,9 @@ export default function PremiumPackagesPage({
               className="w-full pl-9 pr-6 py-2.5 bg-[#F5F8FC] border border-slate-200 rounded-xl text-xs sm:text-sm text-[#14243D] focus:outline-none focus:border-[#1261A0] focus:bg-white transition-all appearance-none"
             >
               <option value="any">Any Price</option>
-              <option value="under1000">&lt; $1,000</option>
-              <option value="1000-2500">$1,000 - $2,500</option>
-              <option value="above2500">&gt; $2,500</option>
+              <option value="under15000">Under ₹15,000</option>
+              <option value="15000-25000">₹15,000 - ₹25,000</option>
+              <option value="25000-100000">₹25,000 - ₹1,00,000</option>
             </select>
           </div>
 
@@ -374,6 +388,28 @@ export default function PremiumPackagesPage({
                   onClick={() => setSearchTerm && setSearchTerm("")}
                   className="hover:text-black ml-1"
                   aria-label="Remove keyword search"
+                >
+                  <X className="w-3 h-3" />
+                </button>
+              </span>
+            )}
+
+            {/* Active Budget Pill */}
+            {budgetFilter && budgetFilter !== "any" && (
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 font-semibold">
+                <DollarSign className="w-3 h-3" />
+                <span>
+                  Budget: {budgetFilter === "under15000" || budgetFilter === "under1000"
+                    ? "< ₹15,000"
+                    : budgetFilter === "15000-25000" || budgetFilter === "15000-20000" || budgetFilter === "1000-2500"
+                    ? "₹15,000 - ₹25,000"
+                    : "< ₹1,00,000"}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setBudgetFilter && setBudgetFilter("any")}
+                  className="hover:text-emerald-950 ml-1"
+                  aria-label="Remove budget filter"
                 >
                   <X className="w-3 h-3" />
                 </button>
@@ -450,13 +486,19 @@ export default function PremiumPackagesPage({
 
           <div className="space-y-2">
             <h3 className="text-xl sm:text-2xl font-black text-[#14243D]">
-              {hasActiveDestinationFilter
+              {destinationMatchInDb
+                ? `"${destinationMatchInDb.destination}" Package Found!`
+                : hasActiveDestinationFilter
                 ? `No Packages Currently Found for "${selectedDestination}"`
                 : "No Packages Match Your Current Filters"}
             </h3>
 
             <p className="text-xs sm:text-sm text-slate-600 max-w-lg mx-auto leading-relaxed">
-              {hasActiveDestinationFilter ? (
+              {destinationMatchInDb ? (
+                <>
+                  We found <strong>{destinationMatchInDb.title}</strong> (Price: <strong>₹{Number(destinationMatchInDb.price).toLocaleString("en-IN")}</strong>) in the database, but it was hidden by your active budget or capacity filter.
+                </>
+              ) : hasActiveDestinationFilter ? (
                 <>
                   The Package Service database does not currently have any itineraries
                   registered for <strong>{selectedDestination}</strong>. However, there{" "}
@@ -474,6 +516,20 @@ export default function PremiumPackagesPage({
 
           {/* Action buttons to recover */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
+            {destinationMatchInDb && (
+              <button
+                type="button"
+                onClick={() => {
+                  if (setBudgetFilter) setBudgetFilter("any");
+                  setOnlyAvailable(false);
+                }}
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-md transition-all active:scale-95"
+              >
+                <span>View {destinationMatchInDb.destination} Package (₹{Number(destinationMatchInDb.price).toLocaleString("en-IN")})</span>
+                <ArrowRight className="w-4 h-4" />
+              </button>
+            )}
+
             <button
               type="button"
               onClick={handleClearFilters}

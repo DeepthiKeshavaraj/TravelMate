@@ -233,7 +233,7 @@ export default function BookingModal({
                 <div className="flex justify-between pt-1 text-base font-bold text-slate-900">
                   <span>Total Amount Paid</span>
                   <span className="text-primary-700">
-                    ${Number(createdBooking.totalPrice).toLocaleString()}
+                    ₹{Number(createdBooking.totalPrice).toLocaleString("en-IN")}
                   </span>
                 </div>
               </div>
@@ -272,7 +272,7 @@ export default function BookingModal({
                   <span>{pkg.duration}</span>
                 </div>
                 <span className="font-bold text-primary-800">
-                  ${unitPrice.toLocaleString()} / person
+                  ₹{unitPrice.toLocaleString("en-IN")} / person
                 </span>
               </div>
 
@@ -410,12 +410,12 @@ export default function BookingModal({
                     Calculated Total
                   </span>
                   <span className="text-xs text-slate-400">
-                    ${unitPrice.toLocaleString()} × {formData.numberOfPeople || 1}{" "}
+                    ₹{unitPrice.toLocaleString("en-IN")} × {formData.numberOfPeople || 1}{" "}
                     {formData.numberOfPeople == 1 ? "guest" : "guests"}
                   </span>
                 </div>
                 <div className="text-2xl font-black text-slate-900">
-                  ${totalPrice.toLocaleString()}
+                  ₹{totalPrice.toLocaleString("en-IN")}
                 </div>
               </div>
 

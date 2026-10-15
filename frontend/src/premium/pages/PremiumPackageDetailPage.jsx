@@ -378,7 +378,7 @@ export default function PremiumPackageDetailPage({
                 Price / Person
               </span>
               <span className="text-sm sm:text-base font-black text-[#1261A0] mt-0.5 block">
-                ${Number(pkg.price).toLocaleString()}
+                ₹{Number(pkg.price).toLocaleString("en-IN")}
               </span>
             </div>
 
@@ -785,7 +785,7 @@ export default function PremiumPackageDetailPage({
               </span>
               <div className="flex items-baseline gap-1 mt-1">
                 <span className="text-3xl font-black text-[#14243D]">
-                  ${Number(pkg.price).toLocaleString()}
+                  ₹{Number(pkg.price).toLocaleString("en-IN")}
                 </span>
                 <span className="text-xs font-medium text-slate-500">
                   / guest

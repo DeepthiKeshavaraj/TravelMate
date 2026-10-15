@@ -97,7 +97,7 @@ export default function PremiumPackageCard({
               Price / person
             </span>
             <div className="text-xl font-black text-[#14243D]">
-              ${Number(pkg.price).toLocaleString()}
+              ₹{Number(pkg.price).toLocaleString("en-IN")}
             </div>
           </div>
 

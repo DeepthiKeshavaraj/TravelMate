@@ -97,7 +97,7 @@ export default function PackageCard({
             </span>
             <div className="flex items-baseline gap-1">
               <span className="text-2xl font-black text-slate-900">
-                ${Number(pkg.price).toLocaleString()}
+                ₹{Number(pkg.price).toLocaleString("en-IN")}
               </span>
             </div>
           </div>

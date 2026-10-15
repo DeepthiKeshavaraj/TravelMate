@@ -211,7 +211,7 @@ export default function ReviewBookingModal({
                   <span>{pkg.duration}</span>
                 </div>
                 <span className="font-bold text-[#1261A0]">
-                  ${unitPrice.toLocaleString()} / person
+                  ₹{unitPrice.toLocaleString("en-IN")} / person
                 </span>
               </div>
 
@@ -370,12 +370,12 @@ export default function ReviewBookingModal({
                     Calculated Total
                   </span>
                   <span className="text-xs text-slate-400">
-                    ${unitPrice.toLocaleString()} × {guestCount}{" "}
+                    ₹{unitPrice.toLocaleString("en-IN")} × {guestCount}{" "}
                     {guestCount === 1 ? "guest" : "guests"}
                   </span>
                 </div>
                 <div className="text-2xl font-black text-[#14243D]">
-                  ${totalPrice.toLocaleString()}
+                  ₹{totalPrice.toLocaleString("en-IN")}
                 </div>
               </div>
 
@@ -472,19 +472,19 @@ export default function ReviewBookingModal({
                   <div className="flex justify-between text-slate-500">
                     <span>Base Package Fare</span>
                     <span>
-                      ${unitPrice.toLocaleString()} × {guestCount}
+                      ₹{unitPrice.toLocaleString("en-IN")} × {guestCount}
                     </span>
                   </div>
                   <div className="flex justify-between text-slate-500">
                     <span>Taxes & Hotel Surcharges</span>
-                    <span className="text-emerald-700 font-medium">Included ($0)</span>
+                    <span className="text-emerald-700 font-medium">Included (Free)</span>
                   </div>
                 </div>
 
                 <div className="flex justify-between pt-2 border-t border-slate-200 text-sm font-black text-[#14243D]">
                   <span>Total Amount</span>
                   <span className="text-[#1261A0]">
-                    ${totalPrice.toLocaleString()}
+                    ₹{totalPrice.toLocaleString("en-IN")}
                   </span>
                 </div>
               </div>
@@ -614,7 +614,7 @@ export default function ReviewBookingModal({
                 <div className="flex justify-between pt-1 text-sm font-bold text-[#14243D]">
                   <span>Total Amount Paid</span>
                   <span className="text-[#1261A0]">
-                    ${Number(confirmedBooking.totalPrice).toLocaleString()}
+                    ₹{Number(confirmedBooking.totalPrice).toLocaleString("en-IN")}
                   </span>
                 </div>
               </div>

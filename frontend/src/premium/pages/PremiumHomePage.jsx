@@ -240,12 +240,12 @@ export default function PremiumHomePage({
                       <select
                         value={heroBudget}
                         onChange={(e) => setHeroBudget(e.target.value)}
-                        className="w-full bg-transparent text-xs font-semibold text-[#14243D] focus:outline-none"
+                        className="w-full bg-transparent text-xs font-semibold text-[#14243D] focus:outline-none cursor-pointer"
                       >
                         <option value="any">Any Budget</option>
-                        <option value="under1000">Under $1,000</option>
-                        <option value="1000-2500">$1,000 - $2,500</option>
-                        <option value="above2500">$2,500+</option>
+                        <option value="under15000">Under ₹15,000</option>
+                        <option value="15000-25000">₹15,000 - ₹25,000</option>
+                        <option value="25000-100000">₹25,000 - ₹1,00,000</option>
                       </select>
                     </div>
                   </div>
