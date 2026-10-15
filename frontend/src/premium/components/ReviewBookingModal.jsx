@@ -15,6 +15,10 @@ import {
   ShieldCheck,
   CreditCard,
   Hotel,
+  QrCode,
+  Copy,
+  Check,
+  Smartphone,
 } from "lucide-react";
 import { createBooking } from "../../api/bookingApi";
 import { getPackageItinerary } from "../../data/packageItineraries";
@@ -65,6 +69,23 @@ export default function ReviewBookingModal({
   const unitPrice = Number(pkg.price) || 0;
   const guestCount = Number(formData.numberOfPeople) || 1;
   const totalPrice = unitPrice * guestCount;
+
+  // UPI Payment Integration state & dynamic payload
+  const [copiedUpi, setCopiedUpi] = useState(false);
+  const [testAmountMode, setTestAmountMode] = useState(false);
+  const customUpiId = "travelmate@okaxis";
+
+  const payableAmount = testAmountMode ? 1 : totalPrice;
+  const upiString = `upi://pay?pa=${encodeURIComponent(customUpiId)}&pn=${encodeURIComponent("TravelMate Tours")}&am=${payableAmount}&cu=INR&tn=${encodeURIComponent(`Booking for ${pkg?.title || "Tour"}`)}`;
+  const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=240x240&margin=6&data=${encodeURIComponent(upiString)}`;
+
+  const handleCopyUpi = () => {
+    if (navigator?.clipboard?.writeText) {
+      navigator.clipboard.writeText(customUpiId);
+      setCopiedUpi(true);
+      setTimeout(() => setCopiedUpi(false), 2000);
+    }
+  };
 
   // Retrieve authentic itinerary and accommodation details
   const itinerary = getPackageItinerary(pkg);
@@ -486,6 +507,100 @@ export default function ReviewBookingModal({
                   <span className="text-[#1261A0]">
                     ₹{totalPrice.toLocaleString("en-IN")}
                   </span>
+                </div>
+              </div>
+
+              {/* Scan & Pay via UPI Dynamic QR Section */}
+              <div className="p-4 sm:p-5 bg-gradient-to-br from-slate-50 via-sky-50/40 to-slate-50 border border-sky-200/80 rounded-2xl space-y-3.5">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 rounded-xl bg-[#1261A0] text-white flex items-center justify-center shadow-xs">
+                      <QrCode className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <h4 className="text-xs sm:text-sm font-black text-[#14243D]">
+                        Scan & Pay via UPI
+                      </h4>
+                      <p className="text-[11px] text-slate-500 font-medium">
+                        Google Pay • PhonePe • Paytm • BHIM
+                      </p>
+                    </div>
+                  </div>
+
+                  <span className="text-xs font-black text-[#1261A0] bg-white px-2.5 py-1 rounded-lg border border-sky-100 shadow-2xs">
+                    ₹{payableAmount.toLocaleString("en-IN")}
+                  </span>
+                </div>
+
+                <div className="flex flex-col sm:flex-row items-center gap-4 bg-white p-3.5 rounded-xl border border-slate-200/80 shadow-2xs">
+                  {/* Generated Dynamic QR Code */}
+                  <div className="w-40 h-40 bg-white p-2 border-2 border-slate-900/10 rounded-xl flex items-center justify-center flex-shrink-0 relative group shadow-xs">
+                    <img
+                      src={qrCodeUrl}
+                      alt="UPI Payment QR Code"
+                      className="w-full h-full object-contain"
+                    />
+                  </div>
+
+                  {/* QR Details & Actions */}
+                  <div className="flex-1 space-y-2 text-center sm:text-left w-full">
+                    <div className="flex items-center justify-center sm:justify-start gap-1.5">
+                      <Smartphone className="w-3.5 h-3.5 text-emerald-600" />
+                      <span className="text-xs font-bold text-slate-800">
+                        Scan with your phone camera or UPI app
+                      </span>
+                    </div>
+
+                    <p className="text-[11px] text-slate-500 leading-relaxed">
+                      Scanning will auto-open Google Pay, PhonePe, or Paytm with payee <strong>TravelMate Tours</strong> and amount <strong>₹{payableAmount.toLocaleString("en-IN")}</strong>.
+                    </p>
+
+                    {/* Copy UPI ID and Test Mode Toggle */}
+                    <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 pt-1">
+                      <button
+                        type="button"
+                        onClick={handleCopyUpi}
+                        className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-[11px] font-semibold transition-colors"
+                        title="Click to copy UPI ID"
+                      >
+                        {copiedUpi ? (
+                          <>
+                            <Check className="w-3 h-3 text-emerald-600" />
+                            <span className="text-emerald-700 font-bold">Copied!</span>
+                          </>
+                        ) : (
+                          <>
+                            <Copy className="w-3 h-3" />
+                            <span>UPI: {customUpiId}</span>
+                          </>
+                        )}
+                      </button>
+
+                      {/* Demo ₹1 mode toggle for viva / live payment testing */}
+                      <button
+                        type="button"
+                        onClick={() => setTestAmountMode(!testAmountMode)}
+                        className={`text-[10px] px-2 py-1 rounded-lg border font-semibold transition-all ${
+                          testAmountMode
+                            ? "bg-amber-100 border-amber-300 text-amber-900 font-bold"
+                            : "bg-slate-50 border-slate-200 text-slate-500 hover:bg-slate-100"
+                        }`}
+                        title="Toggle ₹1 test amount to test live scanning with real bank transfer"
+                      >
+                        {testAmountMode ? "✓ ₹1 Test Mode Active" : "Test with ₹1 (Viva Demo)"}
+                      </button>
+                    </div>
+
+                    {/* Direct mobile pay intent link if browsing on phone */}
+                    <div className="pt-0.5">
+                      <a
+                        href={upiString}
+                        className="inline-flex items-center gap-1 text-[11px] font-bold text-[#1261A0] hover:underline"
+                      >
+                        <span>Open directly in UPI App &rarr;</span>
+                      </a>
+                    </div>
+                  </div>
                 </div>
               </div>
 
