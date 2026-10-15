@@ -42,6 +42,8 @@ export default function ReviewBookingModal({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [serverError, setServerError] = useState(null);
   const [confirmedBooking, setConfirmedBooking] = useState(null);
+  const [copiedUpi, setCopiedUpi] = useState(false);
+  const [testAmountMode, setTestAmountMode] = useState(false);
 
   // Set minimum date to tomorrow
   const tomorrow = new Date();
@@ -60,6 +62,8 @@ export default function ReviewBookingModal({
       setFormErrors({});
       setServerError(null);
       setConfirmedBooking(null);
+      setCopiedUpi(false);
+      setTestAmountMode(false);
     }
   }, [pkg]);
 
@@ -71,8 +75,6 @@ export default function ReviewBookingModal({
   const totalPrice = unitPrice * guestCount;
 
   // UPI Payment Integration state & dynamic payload
-  const [copiedUpi, setCopiedUpi] = useState(false);
-  const [testAmountMode, setTestAmountMode] = useState(false);
   const customUpiId = "travelmate@okaxis";
 
   const payableAmount = testAmountMode ? 1 : totalPrice;
